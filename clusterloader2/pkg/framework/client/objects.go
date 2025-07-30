@@ -38,6 +38,7 @@ import (
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/gengo/namer"
 	gengotypes "k8s.io/gengo/types"
+	"k8s.io/klog/v2"
 )
 
 const (
@@ -72,6 +73,10 @@ func RetryWithExponentialBackOff(fn wait.ConditionFunc) error {
 
 // IsRetryableAPIError verifies whether the error is retryable.
 func IsRetryableAPIError(err error) bool {
+	if apierrs.IsUnauthorized(err) {
+		klog.Warningf("unauthorized: %v", err)
+	}
+
 	// These errors may indicate a transient error that we can retry in tests.
 	if apierrs.IsInternalError(err) || apierrs.IsTimeout(err) || apierrs.IsServerTimeout(err) ||
 		apierrs.IsTooManyRequests(err) || utilnet.IsProbableEOF(err) || utilnet.IsConnectionReset(err) ||
@@ -145,6 +150,7 @@ func RetryFunction(f func() error, options ...*APICallOptions) wait.ConditionFun
 			return true, nil
 		}
 		if IsRetryableAPIError(err) || IsRetryableNetError(err) {
+			klog.Warningf("retryable err: %v", err)
 			return false, nil
 		}
 		for _, shouldAllowError := range shouldAllowErrorFuncs {
@@ -189,6 +195,7 @@ func ListNodesWithOptions(c clientset.Interface, listOpts metav1.ListOptions) ([
 	listFunc := func() error {
 		nodesList, err := c.CoreV1().Nodes().List(context.TODO(), listOpts)
 		if err != nil {
+			klog.Warningf("list nodes: %v", err)
 			return err
 		}
 		nodes = nodesList.Items
