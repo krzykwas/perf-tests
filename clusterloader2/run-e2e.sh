@@ -101,7 +101,7 @@ kind: Config
 clusters:
 - name: default-cluster
   cluster:
-    certificate-authority-data: ${ca}
+#   certificate-authority-data: ${ca}
     server: ${server}
 contexts:
 - name: default-context
