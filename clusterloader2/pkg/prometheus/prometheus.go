@@ -214,6 +214,10 @@ func NewController(clusterLoaderConfig *config.ClusterLoaderConfig) (pc *Control
 	snapshotEnabled, _ := pc.isEnabled()
 	mapping["RetainPD"] = snapshotEnabled
 
+	endpoint := os.Getenv("GKFE_CLUSTER_ENDPOINT")
+	klog.Infof("GKFE endpoint %v", endpoint)
+	mapping["GKFEEndpoint"] = endpoint
+
 	pc.templateMapping = mapping
 
 	pc.ssh = &util.GCloudSSHExecutor{}

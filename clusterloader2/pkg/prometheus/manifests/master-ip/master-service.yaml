@@ -10,8 +10,8 @@ metadata:
   labels:
     k8s-app: master
 spec:
-  type: ClusterIP
-  clusterIP: None
+  type: ExternalName
+  externalName: {{ .GKFEEndpoint }}
   ports:
     - name: apiserver
       port: 443
