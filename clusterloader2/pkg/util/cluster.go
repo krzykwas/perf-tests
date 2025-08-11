@@ -77,10 +77,10 @@ func LogClusterNodes(c clientset.Interface) error {
 		var internalIP, externalIP string
 		isSchedulable := IsNodeSchedulableAndUntainted(&nodeList[i])
 		for _, address := range nodeList[i].Status.Addresses {
-			if address.Type == corev1.NodeInternalIP {
+			if address.Type == corev1.NodeInternalIP && internalIP == "" {
 				internalIP = address.Address
 			}
-			if address.Type == corev1.NodeExternalIP {
+			if address.Type == corev1.NodeExternalIP && externalIP == ""{
 				externalIP = address.Address
 			}
 		}
