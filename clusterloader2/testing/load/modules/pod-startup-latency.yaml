@@ -38,6 +38,8 @@ steps:
         apiVersion: apps/v1
         kind: Deployment
         labelSelector: group = latency
+        useHostInternalIPs: false
+        useHostPublicIPs: false
         operationTimeout: 15m
 - name: Creating latency pods
   phases:
