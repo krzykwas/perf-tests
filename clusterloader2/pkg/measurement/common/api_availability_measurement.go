@@ -20,6 +20,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"net/netip"
 	"strconv"
 	"sync"
 	"time"
@@ -75,6 +76,16 @@ func (a *apiAvailabilityMeasurement) updateHostAvailabilityMetrics() {
 	mu := sync.Mutex{}
 	for _, ip := range a.hostIPs {
 		ip := ip
+
+		aaa, err := netip.ParseAddr(ip)
+		if err != nil {
+			continue
+		}
+		if aaa.Is4() {
+			// Can't call an IPv4 host address from an IPv6 pod.
+			continue
+		}
+
 		go func() {
 			defer wg.Done()
 			statusCode, err := a.pollHost(ip)
