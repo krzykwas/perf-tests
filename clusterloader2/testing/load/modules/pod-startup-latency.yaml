@@ -2,7 +2,7 @@
 
 ## Input Params
 {{$namespaces := .namespaces}}
-{{$minPodsInSmallCluster := .minPodsInSmallCluster}}
+{{$minPodsInSmallCluster := 100}} #.minPodsInSmallCluster}}
 {{$image := .image}}
 
 ## CL2 Params
@@ -18,7 +18,7 @@
 
 ## Variables
 {{$latencyReplicas := Ceil (DivideFloat $LATENCY_POD_COUNT $namespaces)}}
-{{$podStartupLatencyThreshold := DefaultParam .CL2_POD_STARTUP_LATENCY_THRESHOLD "5s"}}
+{{$podStartupLatencyThreshold := DefaultParam .CL2_POD_STARTUP_LATENCY_THRESHOLD "1m"}}
 {{$CHECK_IF_PODS_ARE_UPDATED := DefaultParam .CL2_CHECK_IF_PODS_ARE_UPDATED true}}
 
 steps:
